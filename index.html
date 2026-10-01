@@ -95,6 +95,15 @@
     border-bottom: 1px solid var(--rule);
     margin-bottom: 24px;
   }
+  .hero-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .roller-icon {
+    flex-shrink: 0;
+    margin-bottom: 2px;
+  }
   .hero-title {
     font-family: 'Fraunces', serif;
     font-weight: 500;
@@ -518,9 +527,29 @@
   </div>
 
   <header class="hero">
-    <div>
-      <p class="hero-title">Life List</p>
-      <p class="hero-sub">Every bird, once</p>
+    <div class="hero-title-row">
+      <svg class="roller-icon" width="38" height="30" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" aria-label="Lilac-breasted roller">
+        <ellipse cx="50" cy="74" rx="14" ry="2.2" fill="#1a1a1a" opacity="0.12"/>
+        <line x1="43" y1="62" x2="43" y2="71" stroke="#3a2c1d" stroke-width="2.2" stroke-linecap="round"/>
+        <line x1="57" y1="62" x2="57" y2="71" stroke="#3a2c1d" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M39,71 L47,71" stroke="#3a2c1d" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M53,71 L61,71" stroke="#3a2c1d" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M66,46 C80,48 92,54 99,62 C97,65 93,65 90,63 C81,56 71,51 60,48 Z" fill="#0d1b2e"/>
+        <path d="M63,52 C76,58 87,66 94,75 C91,77 88,77 85,75 C75,67 65,60 55,55 Z" fill="#1c4f8c"/>
+        <path d="M46,34 C58,30 70,33 76,41 C79,46 77,52 70,54 C60,56 49,52 44,45 C41,41 42,37 46,34 Z" fill="#2c4f9e"/>
+        <path d="M60,33 C68,34 74,38 76,43 C77,47 75,51 70,52 C67,48 64,43 61,38 C60,36 59,34 60,33 Z" fill="#111722"/>
+        <ellipse cx="52" cy="49" rx="22" ry="17" fill="#2bb3ab"/>
+        <ellipse cx="33" cy="44" rx="10.5" ry="13" fill="#b48fd1"/>
+        <circle cx="27" cy="27" r="13.5" fill="#9c6b3e"/>
+        <path d="M16,25.5 C20,24.3 25,24.3 29,25.5 C25,27.3 20,27.3 16,25.5 Z" fill="#171310"/>
+        <circle cx="21.5" cy="24.5" r="2.6" fill="#fbf6ee"/>
+        <circle cx="22" cy="24.5" r="1.2" fill="#171310"/>
+        <path d="M15,29 L1,25.5 C-0.5,25 -0.5,27 1,27.6 L15,32 Z" fill="#171310"/>
+      </svg>
+      <div>
+        <p class="hero-title">Life List</p>
+        <p class="hero-sub">Every bird, once</p>
+      </div>
     </div>
     <div class="count-block">
       <div class="count-num" id="countNum">0</div>
