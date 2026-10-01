@@ -449,7 +449,18 @@
     color: var(--ink);
     margin: 0;
     word-break: break-word;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
   }
+  .entry-name:hover { color: var(--accent); }
+  .entry-name-icon {
+    flex-shrink: 0;
+    opacity: 0.45;
+    transform: translateY(1px);
+  }
+  .entry-name:hover .entry-name-icon { opacity: 0.9; }
   .entry-latin {
     font-size: 12.5px;
     font-style: italic;
@@ -1256,7 +1267,7 @@ function render() {
       <div class="entry" data-id="${en.id}">
         ${en.photo ? `<img class="entry-thumb" src="${en.photo}" alt="${escapeHtml(en.name)}">` : ''}
         <div class="entry-main">
-          <p class="entry-name">${escapeHtml(en.name)}</p>
+          <a class="entry-name" href="https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(en.name)}&fulltext=1" target="_blank" rel="noopener">${escapeHtml(en.name)}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="entry-name-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg></a>
           ${en.latin ? `<p class="entry-latin">${escapeHtml(en.latin)}</p>` : ''}
           <div class="entry-meta">
             ${(en.location || en.country) ? `<span>${escapeHtml([en.location, en.country].filter(Boolean).join(', '))}</span>` : ''}
