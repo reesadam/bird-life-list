@@ -86,6 +86,51 @@
   }
   .storage-banner > strong { display: block; margin-bottom: 4px; font-size: 14px; }
   .storage-banner p { margin: 0; opacity: 0.95; }
+
+  .milestone-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--paper-raised);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 13px 14px;
+    margin-bottom: 20px;
+  }
+  .milestone-banner .glyph {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--paper-raised);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .milestone-banner-text { flex: 1; min-width: 0; }
+  .milestone-banner-text strong {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .milestone-banner-text span {
+    display: block;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 1px;
+  }
+  .milestone-banner-close {
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+    line-height: 0;
+  }
   header.hero {
     display: flex;
     align-items: flex-end;
@@ -573,6 +618,19 @@
     </div>
   </header>
 
+  <div class="milestone-banner" id="milestoneBanner" style="display:none;">
+    <div class="glyph">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2 L14.5 8.5 L21 9.3 L16 13.8 L17.5 20.3 L12 16.8 L6.5 20.3 L8 13.8 L3 9.3 L9.5 8.5 Z"/></svg>
+    </div>
+    <div class="milestone-banner-text">
+      <strong id="milestoneBannerTitle"></strong>
+      <span id="milestoneBannerSub"></span>
+    </div>
+    <button type="button" class="milestone-banner-close" id="milestoneBannerClose" aria-label="Dismiss">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
   <div class="storage-warning" id="storageWarning" style="display:none;">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     <span>This device isn't saving your list reliably. <button type="button" id="storageWarningExport">Export as CSV now</button> so nothing gets lost.</span>
@@ -684,6 +742,7 @@ const BIRD_FAMILY_BY_NAME = Object.fromEntries(BIRDS.map(b => [b.c.toLowerCase()
 const COUNTRIES = ["Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia, Plurinational State of", "Bonaire, Sint Eustatius and Saba", "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo", "Congo, The Democratic Republic of the", "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Cura\u00e7ao", "Cyprus", "Czechia", "C\u00f4te d'Ivoire", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Falkland Islands (Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Holy See (Vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran, Islamic Republic of", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, Democratic People's Republic of", "Korea, Republic of", "Kuwait", "Kyrgyzstan", "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States of", "Moldova, Republic of", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "North Macedonia", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Palestine, State of", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Romania", "Russian Federation", "Rwanda", "R\u00e9union", "Saint Barth\u00e9lemy", "Saint Helena, Ascension and Tristan da Cunha", "Saint Kitts and Nevis", "Saint Lucia", "Saint Martin (French part)", "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten (Dutch part)", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and the South Sandwich Islands", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard and Jan Mayen", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan, Province of China", "Tajikistan", "Tanzania, United Republic of", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "T\u00fcrkiye", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela, Bolivarian Republic of", "Viet Nam", "Virgin Islands, British", "Virgin Islands, U.S.", "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe", "\u00c5land Islands"];
 
 const STORAGE_KEY = 'birdLifeList.entries.v1';
+const MILESTONE_KEY = 'birdLifeList.celebratedMilestones.v1';
 
 // --- IndexedDB backup store ---
 // iOS Safari's "Add to Home Screen" standalone mode is known to sometimes
@@ -860,6 +919,57 @@ let currentFamily = '';
 function setFamily(family) {
   currentFamily = family || '';
 }
+
+// --- Milestone celebrations ---
+const TOTAL_WORLD_SPECIES = BIRDS.length;
+const milestoneBanner = document.getElementById('milestoneBanner');
+const milestoneBannerTitle = document.getElementById('milestoneBannerTitle');
+const milestoneBannerSub = document.getElementById('milestoneBannerSub');
+const milestoneBannerClose = document.getElementById('milestoneBannerClose');
+
+function loadCelebratedMilestones() {
+  try {
+    const raw = localStorage.getItem(MILESTONE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveCelebratedMilestones(list) {
+  try { localStorage.setItem(MILESTONE_KEY, JSON.stringify(list)); } catch (e) {}
+}
+
+function showMilestoneBanner(count) {
+  const percent = (count / TOTAL_WORLD_SPECIES * 100).toFixed(1);
+  milestoneBannerTitle.textContent = `${count} species!`;
+  milestoneBannerSub.textContent = `That's ${percent}% of every bird species on Earth.`;
+  milestoneBanner.style.display = 'flex';
+}
+
+// prevCount/newCount so a jump of more than one species (e.g. a bulk CSV
+// import) still celebrates the highest 50-multiple it crossed, not just an
+// exact landing on one.
+function checkMilestone(prevCount, newCount) {
+  if (newCount <= prevCount) return;
+  const celebrated = loadCelebratedMilestones();
+  let highestNew = null;
+  for (let m = Math.floor(newCount / 50) * 50; m > prevCount; m -= 50) {
+    if (m > 0 && !celebrated.includes(m)) {
+      if (highestNew === null) highestNew = m;
+      celebrated.push(m);
+    }
+  }
+  if (highestNew !== null) {
+    saveCelebratedMilestones(celebrated);
+    showMilestoneBanner(highestNew);
+  }
+}
+
+milestoneBannerClose.addEventListener('click', () => {
+  milestoneBanner.style.display = 'none';
+});
 
 // --- Photo capture ---
 let currentPhoto = '';
@@ -1134,6 +1244,8 @@ entryForm.addEventListener('submit', (e) => {
       saveOk = saveEntries(entries);
     }
     setStorageWarning(!saveOk);
+    const newUniqueCount = new Set(entries.map(en => en.name.trim().toLowerCase())).size;
+    checkMilestone(newUniqueCount - 1, newUniqueCount);
     resetForm();
     render();
     return;
@@ -1445,6 +1557,7 @@ importFileInput.addEventListener('change', () => {
       alert('That CSV doesn\'t look like a Life List export (no "Bird" column found).');
       return;
     }
+    const prevUniqueCount = new Set(entries.map(en => en.name.trim().toLowerCase())).size;
     let added = 0, skipped = 0;
     for (const r of rows.slice(1)) {
       const name = (r[idx.name] || '').trim();
@@ -1465,6 +1578,10 @@ importFileInput.addEventListener('change', () => {
     }
     const saveOk = saveEntries(entries);
     setStorageWarning(!saveOk);
+    if (added > 0) {
+      const newUniqueCount = new Set(entries.map(en => en.name.trim().toLowerCase())).size;
+      checkMilestone(prevUniqueCount, newUniqueCount);
+    }
     render();
     alert(`Imported ${added} bird${added === 1 ? '' : 's'}.` + (skipped ? ` Skipped ${skipped} already on your list.` : ''));
   };
