@@ -188,7 +188,7 @@
   .field input, .field textarea {
     width: 100%;
     font-family: inherit;
-    font-size: 15px;
+    font-size: 16px;
     color: var(--ink);
     background: var(--paper);
     border: 1px solid var(--rule);
@@ -400,7 +400,7 @@
   .search-field input {
     width: 100%;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--ink);
     background: var(--paper-raised);
     border: 1px solid var(--rule);
@@ -419,7 +419,7 @@
   }
   .sort-select {
     font-family: inherit;
-    font-size: 13px;
+    font-size: 16px;
     color: var(--ink);
     background: var(--paper-raised);
     border: 1px solid var(--rule);
@@ -925,8 +925,19 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+// Treats "-" and " " as equivalent when searching (so "grey headed" finds
+// "Grey-headed X" and vice versa). Replacing one single character with
+// another keeps every index identical between the normalized and original
+// strings, so we can search on the normalized text but slice/highlight the
+// real one -- the hyphen still displays correctly either way.
+function normalizeForMatch(s) {
+  return s.toLowerCase().replace(/-/g, ' ');
+}
+
 function highlightMatch(name, query) {
-  const idx = name.toLowerCase().indexOf(query.toLowerCase());
+  const normName = normalizeForMatch(name);
+  const normQuery = normalizeForMatch(query);
+  const idx = normName.indexOf(normQuery);
   if (idx === -1) return escapeHtml(name);
   return escapeHtml(name.slice(0, idx)) + '<mark>' + escapeHtml(name.slice(idx, idx + query.length)) + '</mark>' + escapeHtml(name.slice(idx + query.length));
 }
@@ -947,14 +958,13 @@ function createAutocomplete({
       close();
       return;
     }
-    const q = query.toLowerCase();
+    const q = normalizeForMatch(query);
     const starts = [];
     const contains = [];
     for (const item of data) {
-      const texts = [].concat(matchText(item)).map(t => t.toLowerCase());
+      const texts = [].concat(matchText(item)).map(normalizeForMatch);
       if (texts.some(t => t.startsWith(q))) starts.push(item);
       else if (texts.some(t => t.includes(q))) contains.push(item);
-      if (starts.length + contains.length > 40) break;
     }
     currentMatches = [...starts, ...contains].slice(0, maxResults);
     activeIndex = -1;
@@ -1036,11 +1046,11 @@ const birdAutocomplete = createAutocomplete({
   list: autocompleteList,
   data: BIRDS,
   wrap: document.getElementById('nameFieldWrap'),
-  maxResults: 8,
+  maxResults: 40,
   matchText: (bird) => [bird.c, bird.l],
   renderItem: (bird, query) => {
-    const q = query.toLowerCase();
-    const matchedLatin = !bird.c.toLowerCase().includes(q) && bird.l.toLowerCase().includes(q);
+    const q = normalizeForMatch(query);
+    const matchedLatin = !normalizeForMatch(bird.c).includes(q) && normalizeForMatch(bird.l).includes(q);
     return matchedLatin
       ? `<div>${escapeHtml(bird.c)}</div><div class="autocomplete-sub">${highlightMatch(bird.l, query)}</div>`
       : `<div>${highlightMatch(bird.c, query)}</div><div class="autocomplete-sub">${escapeHtml(bird.l)}</div>`;
