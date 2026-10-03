@@ -1400,12 +1400,14 @@ function render() {
 
   if (entries.length === 0) {
     entriesList.innerHTML = '';
-    footerNote.innerHTML = '';
     entriesList.parentElement.querySelector('.empty-state')?.remove();
     const empty = document.createElement('div');
     empty.className = 'empty-state';
-    empty.innerHTML = '<div class="glyph">&#129412;</div><p>Your list is empty.<br>Add the first bird you remember seeing.</p>';
+    empty.innerHTML = '<div class="glyph">&#129412;</div><p>Your list is empty.<br>Add the first bird you remember seeing, or import a CSV.</p>';
     entriesList.after(empty);
+    footerNote.innerHTML = `<button id="importBtn" type="button">Import from CSV</button>`;
+    const importBtn = document.getElementById('importBtn');
+    if (importBtn) importBtn.addEventListener('click', () => importFileInput.click());
     return;
   } else {
     document.querySelector('.empty-state')?.remove();
