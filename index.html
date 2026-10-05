@@ -1607,6 +1607,14 @@ if (storageWarningExportBtn) {
 
 reconcileFromIDB();
 
+// Enables launching with no connection at all after the first successful
+// load. Harmless if sw.js isn't present yet (fails silently) or if the
+// browser doesn't support service workers.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
 </script>
 </body>
 </html>
